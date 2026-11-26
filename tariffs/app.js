@@ -4,7 +4,8 @@ const premium = !['showcase', 'standard'].includes(document.body.dataset?.access
 const preview = document.body.dataset?.preview === 'tariffs';
 const datasetPath = preview ? document.body.dataset.access + '/' : '';
 const $ = id => document.getElementById(id);
-const state = {places: [], lockedPlaces: [], visible: [], selected: null, similar: null, focus: 'all', matches: new Map(), map: null, pins: null, markers: new Map(), here: null, sortedAt: null, watch: null, follow: false, location: null};
+const state = {places: [], lockedPlaces: [], visible: [], selected: null, similar: null, focus: 'all', matches: new Map(), map: null, pins: null, markers: new Map(), markerCache: new Map(), here: null, sortedAt: null, watch: null, follow: false, location: null};
+let searchTimer;
 // «Хочу» и «Был» live only in this browser: {placeId: 'want' | 'been'}.
 const MARKS_KEY = preview ? 'bali-preview-marks' : 'bali-marks';
 const marks = (() => {try {if (showcase) return {}; return JSON.parse(localStorage.getItem(MARKS_KEY)) || {};} catch {return {};}})();
@@ -122,7 +123,41 @@ const distance = d => d < 1 ? Math.round(d * 100) * 10 + (english ? ' m' : ' м'
 // Category without its leading emoji, area and, once the location is known, distance: «Рестораны · Убуд и окрестности · 3,2 км».
 const meta = p => `<p class="meta">${escaped(label(p, 'category').replace(/^\S+\s+/, ''))} · ${escaped(label(p, 'area'))}${state.here && p.lat !== null ? ' · ' + distance(km(state.here, [p.lat, p.lng])) : ''}</p>`;
 const markButtons = p => showcase ? '' : `<div class="marks">${[['want', 'Хочу'], ['been', 'Был']].map(([mark, label]) => `<button type="button" data-mark="${mark}" data-id="${p.id}" aria-pressed="${marks[p.id] === mark}">${t(label)}</button>`).join('')}</div>`;
-const pinIcon = p => L.divIcon({className: 'emoji-pin' + (!showcase && marks[p.id] ? ' ' + marks[p.id] : ''), html: escaped(p.emoji), iconSize: [32, 32], iconAnchor: [16, 16], popupAnchor: [0, -16]});
+// One shared Canvas; sprites cache the expensive emoji/font/shadow painting.
+// CircleMarker keeps Leaflet hit testing, tooltips and popups; the list provides keyboard access.
+function emojiRenderer() {
+  // Radius includes the shadow so partial redraws also erase the old shadow.
+  const EmojiMarker = L.CircleMarker.extend({
+    _updatePath() {this._renderer._updateEmoji(this);},
+    _containsPoint(point) {return this._point.distanceTo(point) <= 16;}
+  });
+  const sprites = new Map(), scale = Math.max(2, window.devicePixelRatio || 1);
+  return new (L.Canvas.extend({
+    marker(p) {return new EmojiMarker([p.lat, p.lng], {renderer: this, place: p, radius: 20, stroke: false, fill: false, bubblingMouseEvents: false});},
+    _updateEmoji(layer) {
+      if (!this._drawing || layer._empty()) return;
+      const p = layer.options.place, mark = showcase ? '' : marks[p.id] || '';
+      const key = p.emoji + ':' + mark;
+      if (!sprites.has(key)) {
+        const sprite = document.createElement('canvas');
+        sprite.width = sprite.height = 40 * scale;
+        const ctx = sprite.getContext('2d');
+        ctx.scale(scale, scale);
+        ctx.shadowColor = '#0003'; ctx.shadowBlur = 4; ctx.shadowOffsetY = 1;
+        ctx.fillStyle = '#fff'; ctx.beginPath(); ctx.arc(20, 20, 16, 0, Math.PI * 2); ctx.fill();
+        ctx.shadowColor = 'transparent';
+        if (mark === 'want') {ctx.strokeStyle = '#e8590c'; ctx.lineWidth = 2; ctx.stroke();}
+        ctx.font = '18px system-ui'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+        ctx.fillStyle = '#222'; ctx.fillText(p.emoji, 20, 21);
+        sprites.set(key, sprite);
+      }
+      this._ctx.save();
+      this._ctx.globalAlpha = mark === 'been' ? 0.45 : 1;
+      this._ctx.drawImage(sprites.get(key), layer._point.x - 20, layer._point.y - 20, 40, 40);
+      this._ctx.restore();
+    }
+  }))({padding: 0.2});
+}
 function popup(p) {
   return `${p.image ? `<img class="popup-img" src="${escaped(p.image)}" alt="${escaped(label(p, 'name'))}">` : ''}<h2>${escaped(label(p, 'name'))}</h2>${meta(p)}${details(p)}${similarityReason(p)}<div class="links">${links(p, true)}</div>${markButtons(p)}${similarButton(p)}`;
 }
@@ -199,7 +234,7 @@ function select(id, fromMap = false) {
   // Revealing the map must not start a competing fitBounds animation over this selection.
   if (matchMedia('(max-width:760px)').matches) view(true, false);
   const marker = state.markers.get(id);
-  if (state.map && marker) requestAnimationFrame(() => {state.map.setView([p.lat, p.lng], 15, {animate: false}); state.pins.zoomToShowLayer(marker, () => marker.openPopup());});
+  if (state.map && marker) requestAnimationFrame(() => {state.map.setView([p.lat, p.lng], 15, {animate: false}); if (state.map.hasLayer(marker)) marker.openPopup(); else state.pins.zoomToShowLayer(marker, () => marker.openPopup());});
 }
 function setMark(id, mark) {
   if (showcase) return;
@@ -207,7 +242,7 @@ function setMark(id, mark) {
   try {localStorage.setItem(MARKS_KEY, JSON.stringify(marks));} catch {}
   document.querySelectorAll(`[data-mark][data-id="${id}"]`).forEach(b => b.setAttribute('aria-pressed', String(marks[id] === b.dataset.mark)));
   const p = state.places.find(place => place.id === id);
-  if (p) state.markers.get(id)?.setIcon(pinIcon(p));
+  if (p) state.markers.get(id)?.redraw();
   if ($('mark').value) render();
 }
 function renderList() {
@@ -219,6 +254,7 @@ function renderList() {
   $('cards').innerHTML = shown.length ? shown.map(card).join('') : `<div class="empty"><strong>${t('Ничего не нашлось')}</strong>${state.similar ? t('Совпадений по описаниям нет. Выберите другой признак или сбросьте фильтры.') : $('mark').value ? t('Отметок пока нет: нажмите «Хочу» или «Был» в карточке.') : t('Измените запрос или сбросьте фильтры.')}</div>`;
 }
 function render() {
+  clearTimeout(searchTimer);
   const words = fold($('search').value).trim().split(/\s+/).filter(Boolean);
   const area = $('area').value, category = $('category').value, mark = $('mark').value;
   const source = state.places.find(p => p.id === state.similar);
@@ -236,18 +272,25 @@ function render() {
   state.visible = candidates.filter(p => (!area || p.area === area) && (!category || p.category === category) && (!mark || marks[p.id] === mark) && words.every(word => fold([p.name, p.description, p.recommendation, p.area, p.category, ...['name', 'description', 'recommendation', 'area', 'category'].map(field => label(p, field))].join(' ')).includes(word)));
   renderList();
   if (state.map) {
-    state.pins.clearLayers(); state.markers.clear();
-    state.visible.filter(p => p.lat !== null).forEach(p => {
-      // Popup content is built on open, so it shows the current marks and distance.
-      const marker = L.marker([p.lat, p.lng], {icon: pinIcon(p), title: label(p, 'name'), alt: label(p, 'name')}).bindPopup(layer => {
-        // Size against the map on every open, including clients with older cached CSS.
-        // Auto-pan must leave the anchor on screen or markercluster removes it and closes the popup.
-        layer.getPopup().options.maxHeight = Math.max(80, state.map.getSize().y - 100);
-        return popup(p);
-      }, {maxWidth: 310});
-      marker.on('click', () => select(p.id, true)); state.markers.set(p.id, marker);
+    const wanted = new Set(state.visible.filter(p => p.lat !== null).map(p => p.id));
+    const removed = [...state.markers].filter(([id]) => !wanted.has(id));
+    state.pins.removeLayers(removed.map(([, marker]) => marker));
+    removed.forEach(([id]) => state.markers.delete(id));
+    const added = [];
+    state.visible.filter(p => p.lat !== null && !state.markers.has(p.id)).forEach(p => {
+      let marker = state.markerCache.get(p.id);
+      if (!marker) {
+        marker = state.emojiCanvas.marker(p).bindTooltip(escaped(label(p, 'name'))).bindPopup(layer => {
+          // Build on open to use current marks, distance and map dimensions.
+          layer.getPopup().options.maxHeight = Math.max(80, state.map.getSize().y - 100);
+          return popup(p);
+        }, {maxWidth: 310, offset: [0, -16]});
+        marker.on('click', () => select(p.id, true));
+        state.markerCache.set(p.id, marker);
+      }
+      state.markers.set(p.id, marker); added.push(marker);
     });
-    state.pins.addLayers([...state.markers.values()]);
+    state.pins.addLayers(added);
     fit();
   }
   const url = new URL(location.href);
@@ -280,7 +323,8 @@ async function start() {
     // Calibrate against the whole Ubud area, rather than a fixed zoom number:
     // the same geographic view has different zooms on phones and wide screens.
     const districtZoom = () => state.map.getBoundsZoom([[-8.58, 115.21], [-8.43, 115.31]]);
-    state.pins = L.markerClusterGroup({maxClusterRadius: 45, disableClusteringAtZoom: districtZoom() || 12, showCoverageOnHover: false, chunkedLoading: true,
+    state.emojiCanvas = emojiRenderer();
+    state.pins = L.markerClusterGroup({animate: false, maxClusterRadius: 45, disableClusteringAtZoom: districtZoom() || 12, showCoverageOnHover: false, chunkedLoading: true,
       iconCreateFunction: c => L.divIcon({className: 'pin-cluster', html: c.getChildCount(), iconSize: [36, 36]})}).addTo(state.map);
     state.map.on('resize', () => {
       const size = state.map.getSize(), zoom = districtZoom();
@@ -304,7 +348,7 @@ async function start() {
   state.focus = ['all', ...Object.keys(similarityTraits)].includes(params.get('focus')) ? params.get('focus') : 'all';
   render(); if (savedPlace) select(savedPlace);
 }
-$('search').addEventListener('input', clearSimilar);
+$('search').addEventListener('input', () => {clearTimeout(searchTimer); searchTimer = setTimeout(clearSimilar, 160);});
 $('area').addEventListener('change', render); $('category').addEventListener('change', render); $('mark').addEventListener('change', render);
 $('sort').addEventListener('change', () => {if ($('sort').value && !watchLocation()) $('sort').value = ''; renderList(); document.querySelector('.sidebar').scrollTop = 0;});
 $('reset').addEventListener('click', () => {$('filter-drawer').open = false;state.similar = null; state.focus = 'all'; $('search').value = ''; $('area').value = ''; $('category').value = ''; $('mark').value = ''; render();});

@@ -40,11 +40,7 @@ footer{font-size:13px;color:var(--muted);padding:16px 20px 32px}
 .map-panel{position:relative;min-height:0}
 #map{width:100%;height:100%;z-index:0;background:#e9efec}
 .map-status{position:absolute;bottom:32px;left:20px;right:84px;margin:0;background:#fff;border:1px solid var(--line);padding:10px 12px;border-radius:8px;font-size:14px;z-index:2}
-.emoji-pin{background:#fff;border-radius:50%;box-shadow:0 1px 4px #0003;font-size:18px;line-height:32px;text-align:center}
 .pin-cluster{background:#fff;border-radius:50%;box-shadow:0 1px 4px #0003;color:#222;font-size:13px;font-weight:600;line-height:36px;text-align:center}
-.emoji-pin.want{box-shadow:0 0 0 2px #e8590c,0 1px 4px #0003}
-.emoji-pin.been{opacity:.45}
-.emoji-pin.selected{box-shadow:0 0 0 2px var(--accent),0 1px 4px #0003}
 .leaflet-container{font:inherit}
 .leaflet-popup-content-wrapper{border-radius:10px}
 .leaflet-popup-content{font-size:14px;line-height:1.45;max-width:270px;margin:14px;max-height:calc(100dvh - 240px);overflow-y:auto}
