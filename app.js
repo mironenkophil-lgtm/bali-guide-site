@@ -1,9 +1,12 @@
 'use strict';
 const showcase = document.body.dataset?.access === 'showcase';
+const premium = !['showcase', 'standard'].includes(document.body.dataset?.access);
+const preview = document.body.dataset?.preview === 'tariffs';
+const datasetPath = preview ? document.body.dataset.access + '/' : '';
 const $ = id => document.getElementById(id);
 const state = {places: [], lockedPlaces: [], visible: [], selected: null, similar: null, focus: 'all', matches: new Map(), map: null, pins: null, markers: new Map(), here: null, sortedAt: null, watch: null, follow: false, location: null};
 // «Хочу» и «Был» live only in this browser: {placeId: 'want' | 'been'}.
-const MARKS_KEY = 'bali-marks';
+const MARKS_KEY = preview ? 'bali-preview-marks' : 'bali-marks';
 const marks = (() => {try {if (showcase) return {}; return JSON.parse(localStorage.getItem(MARKS_KEY)) || {};} catch {return {};}})();
 const escaped = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const label = (p, field) => english ? translations.places[p.id][field] : p[field];
@@ -67,11 +70,11 @@ function similarPlaces(source, candidates, focus = 'all') {
     return {place: p, reasons, score};
   }).filter(match => match.score > 0).sort((a, b) => b.score - a.score || Number(b.place.area === source.area) - Number(a.place.area === source.area) || a.place.id.localeCompare(b.place.id));
 }
-const similarButton = p => !showcase && dining(p) ? `<button class="similar-button" type="button" data-similar="${escaped(p.id)}">${t('Найти похожее')}</button>` : '';
+const similarButton = p => premium && dining(p) ? `<button class="similar-button" type="button" data-similar="${escaped(p.id)}">${t('Найти похожее')}</button>` : '';
 const similarityReason = p => state.similar && state.matches.has(p.id) ? `<p class="similar-reasons">${t('Общее: ')}${state.matches.get(p.id).reasons.map(reason => escaped(t(reason))).join(' · ')}</p>` : '';
 function chooseSimilar(id) {
   const source = state.places.find(p => p.id === id);
-  if (showcase || !source || !dining(source)) return;
+  if (!premium || !source || !dining(source)) return;
   state.similar = id;
   state.focus = 'all';
   for (const id of ['search', 'area', 'category', 'mark', 'sort']) $(id).value = '';
@@ -93,7 +96,7 @@ function links(p, popup = false) {
   let html = '';
   if (safeLink(p.mapUrl)) html += `<a href="${escaped(p.mapUrl)}" target="_blank" rel="noopener noreferrer">Google Maps</a>`;
   if (p.lat !== null && p.lng !== null) html += `<a href="https://www.google.com/maps/dir/?api=1&destination=${p.lat},${p.lng}" target="_blank" rel="noopener noreferrer">${t('Маршрут')}</a>`;
-  const sources = showcase ? [] : (popup ? (p.sourceUrls || []).slice(0, 1) : (p.sourceUrls || []));
+  const sources = !premium ? [] : (popup ? (p.sourceUrls || []).slice(0, 1) : (p.sourceUrls || []));
   sources.forEach((url, i) => {if (safeLink(url)) html += `<a href="${escaped(url)}" target="_blank" rel="noopener noreferrer">Instagram${sources.length > 1 ? ' ' + (i + 1) : ''}</a>`;});
   return html;
 }
@@ -101,7 +104,7 @@ function links(p, popup = false) {
 const menuBasket = {cafe: 'кофе + завтрак', restaurant: 'салат + основное + алкогольный напиток', bar: '3 коктейля + закуска'};
 const menuCharges = {excluded: 'без налогов и сбора', included: 'налоги и сбор включены', unspecified: 'налоги и сбор не указаны'};
 function priceInfo(p) {
-  if (showcase) return '';
+  if (!premium) return '';
   if (p.googlePriceRange && safeLink(p.googlePriceSourceUrl)) return `<p class="text price">${escaped(p.googlePriceRange)} ${t('на человека')} · <a href="${escaped(p.googlePriceSourceUrl)}" target="_blank" rel="noopener noreferrer">Google Maps</a></p>`;
   const m = p.menuPriceEstimate;
   if (!m || !safeLink(m.sourceUrl)) return '';
@@ -253,7 +256,7 @@ function render() {
   history.replaceState(null, '', url);
 }
 async function start() {
-  const response = await fetch('places.json', {cache: 'no-cache'});
+  const response = await fetch(datasetPath + 'places.json', {cache: 'no-cache'});
   if (!response.ok) throw new Error(t('Не удалось загрузить подборку'));
   const data = await response.json(); state.places = data.places;
   state.lockedPlaces = showcase ? data.lockedPlaces || [] : [];
@@ -261,7 +264,7 @@ async function start() {
     $('mark').closest('label').hidden = true;
     $('showcase-status').textContent = t('Открыто ') + places(state.places.length) + t(' · Серые точки — места в платной карте. Поиск и фильтры работают по открытым карточкам.');
   }
-  if (english) {const response = await fetch('places.en.json', {cache: 'no-cache'}); if (!response.ok) throw new Error('Could not load English translations'); translations = await response.json();}
+  if (english) {const response = await fetch(datasetPath + 'places.en.json', {cache: 'no-cache'}); if (!response.ok) throw new Error('Could not load English translations'); translations = await response.json();}
   $('updated').textContent = t('Обновлено ') + new Date(data.updated + 'T12:00:00').toLocaleDateString(english ? 'en-GB' : 'ru-RU');
   for (const [id, field] of [['area', 'area'], ['category', 'category']]) {
     [...new Set(state.places.map(p => p[field]))].forEach(value => {const opt = new Option(label(state.places.find(p => p[field] === value), field), value); $(id).add(opt);});
@@ -296,7 +299,7 @@ async function start() {
     tiles.on('load', () => {if (!tileErrors) $('map-status').hidden = true;});
     new ResizeObserver(() => state.map.invalidateSize()).observe($('map-panel'));
   } else {$('map-status').hidden = false; $('map-status').textContent = t('Карта недоступна. Места есть в списке.');}
-  const similar = !showcase && state.places.find(p => p.id === params.get('similar') && dining(p));
+  const similar = premium && state.places.find(p => p.id === params.get('similar') && dining(p));
   state.similar = similar?.id || null;
   state.focus = ['all', ...Object.keys(similarityTraits)].includes(params.get('focus')) ? params.get('focus') : 'all';
   render(); if (savedPlace) select(savedPlace);
@@ -318,5 +321,5 @@ document.addEventListener('click', event => {const button = event.target.closest
 $('map-view').addEventListener('click', () => view(true)); $('list-view').addEventListener('click', () => view(false));
 $('locate').addEventListener('click', locate);
 addEventListener('pagehide', stopLocation);
-if ('serviceWorker' in navigator && !showcase) navigator.serviceWorker.register('sw.js').catch(() => {});
-start().catch(error => {$('count').textContent = t('Ошибка загрузки'); $('cards').innerHTML = `<div class="empty"><strong>${escaped(error.message)}</strong>${showcase ? t('Обновите страницу.') : `${t('Обновите страницу или откройте')} <a href="downloads/Bali-places${english ? '-en' : ''}.html">${t('подборку')}</a>.`}</div>`;});
+if ('serviceWorker' in navigator && (!showcase || preview)) navigator.serviceWorker.register('sw.js').catch(() => {});
+start().catch(error => {$('count').textContent = t('Ошибка загрузки'); $('cards').innerHTML = `<div class="empty"><strong>${escaped(error.message)}</strong>${!premium ? t('Обновите страницу.') : `${t('Обновите страницу или откройте')} <a href="${preview ? '../' : ''}downloads/Bali-places${english ? '-en' : ''}.html">${t('подборку')}</a>.`}</div>`;});

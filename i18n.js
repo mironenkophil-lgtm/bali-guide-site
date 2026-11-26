@@ -135,7 +135,7 @@ if (english) {
       if (element.hasAttribute(attribute)) element.setAttribute(attribute, t(element.getAttribute(attribute)));
     }
   }
-  for (const link of document.querySelectorAll('a[href^="downloads/"]')) link.href = link.getAttribute('href').replace(/(\.html|\.pdf|\.kml)$/, '-en$1');
+  for (const link of document.querySelectorAll('a[href*="downloads/"]')) link.href = link.getAttribute('href').replace(/(\.html|\.pdf|\.kml)$/, '-en$1');
   document.querySelector('h1 a').href = '?lang=en';
 }
 const languageURL = new URL(location.href);

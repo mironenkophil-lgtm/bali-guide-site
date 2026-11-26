@@ -1,7 +1,7 @@
 'use strict';
 // Offline copy of the map. The first visit saves the page, the data and every photo;
 // map tiles are saved as they are viewed (no bulk download, per the tile servers' rules).
-const PAGE = 'page-v18', PHOTOS = 'photos-v2', TILES = 'tiles-v2', MAX_TILES = 2000;
+const PAGE = 'page-v19', PHOTOS = 'photos-v2', TILES = 'tiles-v2', MAX_TILES = 2000;
 const FILES = ['./', 'style.css', 'app.js', 'i18n.js', 'places.json', 'places.en.json', 'vendor/leaflet.css', 'vendor/leaflet.js', 'vendor/MarkerCluster.css', 'vendor/leaflet.markercluster.js'];
 
 addEventListener('install', event => event.waitUntil((async () => {
@@ -13,7 +13,7 @@ addEventListener('install', event => event.waitUntil((async () => {
 })()));
 
 addEventListener('activate', event => event.waitUntil((async () => {
-  for (const key of await caches.keys()) if (![PAGE, PHOTOS, TILES].includes(key)) await caches.delete(key);
+  for (const key of await caches.keys()) if (/^(page|photos|tiles)-v/.test(key) && ![PAGE, PHOTOS, TILES].includes(key)) await caches.delete(key);
   await clients.claim();
 })()));
 
@@ -47,5 +47,5 @@ addEventListener('fetch', event => {
   if (url.hostname === 'tile.openstreetmap.org') event.respondWith(saved(request, TILES));
   else if (url.origin !== location.origin) return;
   else if (url.pathname.includes('/photos/')) event.respondWith(saved(request, PHOTOS));
-  else event.respondWith(fresh(request, request.mode === 'navigate' ? './' : request));
+  else event.respondWith(fresh(request, request.mode === 'navigate' ? url.origin + url.pathname : request));
 });
