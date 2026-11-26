@@ -233,7 +233,12 @@ function render() {
     state.pins.clearLayers(); state.markers.clear();
     state.visible.filter(p => p.lat !== null).forEach(p => {
       // Popup content is built on open, so it shows the current marks and distance.
-      const marker = L.marker([p.lat, p.lng], {icon: pinIcon(p), title: label(p, 'name'), alt: label(p, 'name')}).bindPopup(() => popup(p), {maxWidth: 310});
+      const marker = L.marker([p.lat, p.lng], {icon: pinIcon(p), title: label(p, 'name'), alt: label(p, 'name')}).bindPopup(layer => {
+        // Size against the map on every open, including clients with older cached CSS.
+        // Auto-pan must leave the anchor on screen or markercluster removes it and closes the popup.
+        layer.getPopup().options.maxHeight = Math.max(80, state.map.getSize().y - 100);
+        return popup(p);
+      }, {maxWidth: 310});
       marker.on('click', () => select(p.id, true)); state.markers.set(p.id, marker);
     });
     state.pins.addLayers([...state.markers.values()]);
@@ -261,8 +266,8 @@ async function start() {
     L.control.zoom({position: 'topright', zoomInTitle: t('Приблизить'), zoomOutTitle: t('Отдалить')}).addTo(state.map);
     // crossOrigin lets the offline copy (sw.js) save tiles as normal images.
     const tiles = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {maxZoom: 19, crossOrigin: true, attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'}).addTo(state.map);
-    // Cluster only in the island overview; show individual places from zoom 11.
-    state.pins = L.markerClusterGroup({maxClusterRadius: 45, disableClusteringAtZoom: 11, showCoverageOnHover: false, chunkedLoading: true,
+    // Cluster only in the island overview; show individual places from zoom 9.
+    state.pins = L.markerClusterGroup({maxClusterRadius: 45, disableClusteringAtZoom: 9, showCoverageOnHover: false, chunkedLoading: true,
       iconCreateFunction: c => L.divIcon({className: 'pin-cluster', html: c.getChildCount(), iconSize: [36, 36]})}).addTo(state.map);
     let tileErrors = 0;
     tiles.on('tileerror', () => {if (++tileErrors >= 3) {$('map-status').hidden = false; $('map-status').textContent = t('Подложка карты не загрузилась. Места есть в списке.');}});
