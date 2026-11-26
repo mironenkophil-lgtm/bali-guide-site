@@ -596,39 +596,6 @@
       "section": "Temples, museums, art",
       "_sourceHash": "fd21c2c5665ef7d1598108a78a849e3d285181282a7e67050e038d6756772dbb"
     },
-    "4e6563677439": {
-      "name": "PT Gita Gemilang Money Changer at Beji Dalem",
-      "description": "Exchange office at Beji Dalem in the center of Ubud.",
-      "recommendation": "Count your money at the cash register.",
-      "note": "",
-      "address": "Jl. Raya Ubud No.8, Ubud, Kecamatan Ubud, Kabupaten Gianyar, Bali 80571",
-      "area": "Ubud and surroundings",
-      "category": "💱 Currency exchange",
-      "section": "Currency exchange",
-      "_sourceHash": "1d5223c56dd7ad02f5779ddb6b43d0a5239548904ea50ad6f37312ab382105dd"
-    },
-    "7b6beba1c518": {
-      "name": "Desa Swing Bongkasa",
-      "description": "Swings and photo zones in Bongkas.",
-      "recommendation": "Allow 1–2 hours for the swing and bird’s nest photo zone; transfer is not included in the basic package.",
-      "note": "",
-      "address": "Jl. Tangga Yuda, Bongkasa, Kec. Abiansemal, Kabupaten Badung, Bali 80571",
-      "area": "Ubud and surroundings",
-      "category": "🌄 Nature and viewpoints",
-      "section": "Nature and lookouts",
-      "_sourceHash": "f9b61413e638b2feaa1261a650ddd3171931a4daa987a8bd87ed23300f70ae64"
-    },
-    "940affa30dca": {
-      "name": "Swing Heaven",
-      "description": "Swings and photo zones in Bongkas.",
-      "recommendation": "",
-      "note": "",
-      "address": "Jl. Tangga Yuda, Bongkasa, Kec. Abiansemal, Kabupaten Badung, Bali 80352",
-      "area": "Ubud and surroundings",
-      "category": "🌄 Nature and viewpoints",
-      "section": "Nature and lookouts",
-      "_sourceHash": "f7544c0c6bf079cb746dd57ee9329373fb1a55e23f3a15cf6400d5701392f76c"
-    },
     "8f30b5b3660c": {
       "name": "Monkey Padel Bali Ubud",
       "description": "Padel club between Singakerta and Sayan.",
@@ -672,17 +639,6 @@
       "category": "💆 Spas, massage and saunas",
       "section": "Spa, massage, baths",
       "_sourceHash": "90be6b6a80edb77e24bbd19a6ea80a1d7252c8ba49b2de2b8ef1d9b3518ffcf8"
-    },
-    "489d1e071e29": {
-      "name": "Jl. Raya Ubud",
-      "description": "Central street of Ubud: palace, market, cafe.",
-      "recommendation": "",
-      "note": "",
-      "address": "Jl. Raya Ubud, Ubud, Kecamatan Ubud, Kabupaten Gianyar, Bali",
-      "area": "Ubud and surroundings",
-      "category": "🌄 Nature and viewpoints",
-      "section": "Nature and lookouts",
-      "_sourceHash": "60809b4fd14c8039145cf94e7bcad34c0792f0681b497fd34a618aa96d6d0371"
     },
     "d7233904bd49": {
       "name": "Ubud Art Market",
@@ -738,17 +694,6 @@
       "category": "☕ Coffee and breakfast",
       "section": "Coffee and breakfast",
       "_sourceHash": "c1859371c31c0cf8bf241df7de1490573fff82f6f1762bee1f1e9fb240c5b6ca"
-    },
-    "d53fa18fa66c": {
-      "name": "Suka Kopi Ubud",
-      "description": "Coffee and breakfasts in the village of Mas.",
-      "recommendation": "",
-      "note": "",
-      "address": "Jl. Raya Mas No.114, Mas, Kecamatan Ubud, Kabupaten Gianyar, Bali 80571",
-      "area": "Ubud and surroundings",
-      "category": "☕ Coffee and breakfast",
-      "section": "Coffee and breakfast",
-      "_sourceHash": "2f4856d47afaf40f3ea78fa7be2bcbc0ca064229aece6cc3b2a0408f85e77252"
     },
     "55d5c481c062": {
       "name": "Real Bali Swing",
@@ -827,17 +772,6 @@
       "section": "Hotels and villas",
       "_sourceHash": "f394c2cf3c774ee3c3f5a129645c74969d4f598522586752cae0db8b15cf5f90"
     },
-    "d04040c26405": {
-      "name": "Queen at Gunung Sari",
-      "description": "Small hotel in Peliatan with swimming pool, garden and terraces; There is a villa with a private pool.",
-      "recommendation": "If you need a private pool, choose Suite Villa with Private Pool; Deluxe and Superior have a shared pool.",
-      "note": "",
-      "address": "Jl. Pura Gn. Sari, Peliatan, Kecamatan Ubud, Kabupaten Gianyar, Bali 80571",
-      "area": "Ubud and surroundings",
-      "category": "🏨 Hotels and villas",
-      "section": "Hotels and villas",
-      "_sourceHash": "d5c85d20e1bff956ba4cf38a6781c1304fbad641fb7c3cad635d1cb2caa386e4"
-    },
     "9eeecb5a8512": {
       "name": "Kastara Resort and Spa, Ubud",
       "description": "Resort in the Champuhan Hills with an infinity pool overlooking the Vos River Valley, spacious rooms and a spa.",
@@ -848,28 +782,6 @@
       "category": "🏨 Hotels and villas",
       "section": "Hotels and villas",
       "_sourceHash": "aa517efa8662f8ed075754408ecbc3d11de9cf80d652b0465682548f27858490"
-    },
-    "0b10be3bc271": {
-      "name": "Merak Village",
-      "description": "Hotel in Peliatan with garden, outdoor pool, spa and restaurant serving Indonesian and international cuisine.",
-      "recommendation": "Choose a rate with breakfast; Merak Restaurant has Indonesian dishes and vegetarian options.",
-      "note": "",
-      "address": "Jl. Raya Teges Gg. Merak No.12, Peliatan, Kecamatan Ubud, Kabupaten Gianyar, Bali 80571",
-      "area": "Ubud and surroundings",
-      "category": "🏨 Hotels and villas",
-      "section": "Hotels and villas",
-      "_sourceHash": "dd24e55e9de40d333e169c63039d01eeccff7341cc5f29b8f5dfbe071bb7e743"
-    },
-    "b6588e7e8560": {
-      "name": "Villa Esa Ubud",
-      "description": "Villas with private pools and living areas in Penestanan, west of central Ubud.",
-      "recommendation": "Coordinate collection with luggage: there is a pedestrian path leading to the villa; cars will not pass through to the entrance.",
-      "note": "",
-      "address": "Jl. Penestanan Kelod, Sayan, Kecamatan Ubud, Kabupaten Gianyar, Bali 80571",
-      "area": "Ubud and surroundings",
-      "category": "🏨 Hotels and villas",
-      "section": "Hotels and villas",
-      "_sourceHash": "7d05f72c53b4d8551dfd103a917713f90b8e4d1d2102458bb63a21b06ccb7359"
     },
     "b25047b4bbb9": {
       "name": "Alas Harum Bali",
@@ -1564,17 +1476,6 @@
       "section": "Coffee and breakfast",
       "_sourceHash": "83d1e797d555f6287b3cafebee7bb608118219bd1a39dd858670ec444fe4b17f"
     },
-    "f3cb9eb90751": {
-      "name": "Mimpi Grocery",
-      "description": "Breakfast and brunch cafe on Batu Mejan.",
-      "recommendation": "",
-      "note": "",
-      "address": "Jl. Pantai Batu Mejan No.67H, Canggu, Kec. Kuta Utara, Kabupaten Badung, Bali 80351",
-      "area": "Canggu, Berawa, Pererenan, Seseh",
-      "category": "☕ Coffee and breakfast",
-      "section": "Coffee and breakfast",
-      "_sourceHash": "794596a69d6695f136d9f796b4e2fc25ad68b59fa51f19c3673415877fcd662b"
-    },
     "c8fa5c284395": {
       "name": "Further Hotel",
       "description": "Design hotel of several buildings in Pererenana, with spacious suites and a rooftop pool.",
@@ -1597,17 +1498,6 @@
       "section": "Hotels and villas",
       "_sourceHash": "ef3eb47311c57bac13d112e3754277bea68e81495fed9bd0e9eb1762d7129da6"
     },
-    "806f5f48e5f2": {
-      "name": "The Clifton Canggu",
-      "description": "Modern one bedroom villas with private pool and garden views on Nelayang Road.",
-      "recommendation": "For two - One Bedroom Private Pool Garden Villa: 80 m², private pool and large XL King bed.",
-      "note": "",
-      "address": "Jl. Nelayan, Canggu, Kec. Kuta Utara, Kabupaten Badung, Bali 80361",
-      "area": "Canggu, Berawa, Pererenan, Seseh",
-      "category": "🏨 Hotels and villas",
-      "section": "Hotels and villas",
-      "_sourceHash": "25a8ea571d7402cd21689fcdc63c034fcfd2eeae4cb0ef14c091d892a213f73b"
-    },
     "aecd22c6239a": {
       "name": "Kalapa Resort and Yoga Retreat",
       "description": "Wooden villas and bungalows set in tropical gardens in Canggu, with yoga area, spa and restaurant.",
@@ -1618,17 +1508,6 @@
       "category": "🏨 Hotels and villas",
       "section": "Hotels and villas",
       "_sourceHash": "8ccb6a080eaa1fa2ae9e9c3a39cd73a8a20379b3102f9c27b09898408a68fb9d"
-    },
-    "e3c7527f9816": {
-      "name": "Sunny Muse",
-      "description": "Nelayang Beach Apartments with kitchens and balconies; communal swimming pool, sauna and gym area on the roof.",
-      "recommendation": "Sauna and swimming pool are shared; There is a training area on the roof. Parking at the apartments is for motorcycles only.",
-      "note": "",
-      "address": "Jl. Nelayan No.76, Canggu, Kec. Kuta Utara, Kabupaten Badung, Bali 80361",
-      "area": "Canggu, Berawa, Pererenan, Seseh",
-      "category": "🏨 Hotels and villas",
-      "section": "Hotels and villas",
-      "_sourceHash": "c33401b304ad1bda9d6378086645668329cddf605105e426066c6cd30887e66f"
     },
     "98c838c549b6": {
       "name": "Gigi Susu",
@@ -1937,28 +1816,6 @@
       "category": "🛍️ Shops",
       "section": "Stores",
       "_sourceHash": "8804c48f2b3359213ae504840df64e58f0502a7d00a405100aa0f3b3ca45875d"
-    },
-    "1cf8ff6cebbe": {
-      "name": "Central Kuta Money Exchange - Oberoi",
-      "description": "Oberoi exchanger, Seminyak.",
-      "recommendation": "Count your money at the cash register.",
-      "note": "",
-      "address": "Kerobokan Kelod, Kuta Utara, Badung Regency, Bali 80361",
-      "area": "Umalas, Kerobokan, Seminyak",
-      "category": "💱 Currency exchange",
-      "section": "Currency exchange",
-      "_sourceHash": "f23d22bb6f0109a87a0afa50c09074df597f96743ce8d37367eb8afc3f822639"
-    },
-    "2fbce995b6db": {
-      "name": "MPB Money Changer",
-      "description": "Exchanger for Petitenget.",
-      "recommendation": "Ask about fees before exchanging.",
-      "note": "",
-      "address": "Jl. Petitenget No.100, Kerobokan Kelod, Kec. Kuta Utara, Kabupaten Badung, Bali 80361",
-      "area": "Umalas, Kerobokan, Seminyak",
-      "category": "💱 Currency exchange",
-      "section": "Currency exchange",
-      "_sourceHash": "b2a6a5471f0de03097508edfff4d931e8c086dc154945e2080a305a8a45f34f8"
     },
     "78b51e0043b6": {
       "name": "Petitenget Beach",
@@ -2689,13 +2546,13 @@
     "85eeefc227db": {
       "name": "Bingin Beach",
       "description": "Bingin Beach under the cliffs of Uluwatu, famous for its surf spot.",
-      "recommendation": "Lots of stairs. See tide table.",
-      "note": "",
+      "recommendation": "Wear shoes with grip; account for the difficult descent and the tides.",
+      "note": "The beach is open, but access crosses a work area with demolition debris. The former cliffside venues were demolished.",
       "address": "Bingin Beach, Bali",
       "area": "Uluwatu and the Bukit",
       "category": "🌊 Beaches",
       "section": "Beaches",
-      "_sourceHash": "84012a3e637eebf0bdfa2dcbe423db3bc728689fe7d8a2988eaeae65aedc87e9"
+      "_sourceHash": "a02ca6413f4e310a67c980109296dafad96649410a5e87fb0572c8cff6b20352"
     },
     "51659129417f": {
       "name": "Suluban Beach",
@@ -2774,17 +2631,6 @@
       "section": "Coffee and breakfast",
       "_sourceHash": "a69f0f486a98519143fcf61c795173528d06b90be72c8a959261cff0e8aa423b"
     },
-    "3e6f29abee3e": {
-      "name": "Oakberry Acai Uluwatu",
-      "description": "Acai bowls and smoothies.",
-      "recommendation": "Bowls can be customised with a choice of toppings.",
-      "note": "",
-      "address": "H3, Jl. Labuansait No.10, Uluwatu, Bali 80361",
-      "area": "Uluwatu and the Bukit",
-      "category": "☕ Coffee and breakfast",
-      "section": "Coffee and breakfast",
-      "_sourceHash": "6c1e79063ade283f538e5d36cc7cd179c59e13b36fb5cd6e6a5905ccef22f426"
-    },
     "0eb6ba147c7b": {
       "name": "Karma Spa - Karma Kandara",
       "description": "Spa on the rocks above the ocean at Karma Kandara, Ungasan.",
@@ -2817,28 +2663,6 @@
       "category": "☕ Coffee and breakfast",
       "section": "Coffee and breakfast",
       "_sourceHash": "62e9ec8b46c80c44f182de371262fc42e12d8450288990cf16c0d0313c68c020"
-    },
-    "b9b42ebceefa": {
-      "name": "Nori Boutique Villas",
-      "description": "Bright villas with private terraces and pools in Pechatu, close to Nyang Nyang Beach.",
-      "recommendation": "For a couple, watch One Bedroom Villa; for a group, watch Two Bedroom Villa; These are different categories of accommodation.",
-      "note": "",
-      "address": "Pecatu, Kuta Selatan, Badung, Bali",
-      "area": "Uluwatu and the Bukit",
-      "category": "🏨 Hotels and villas",
-      "section": "Hotels and villas",
-      "_sourceHash": "d3b098176652edb1a911bebb5c258743c74729421540daa96bc6253c054254f4"
-    },
-    "05259df68663": {
-      "name": "MIZU Boutique Villas",
-      "description": "Minimalistic one, two and three bedroom villas and bungalows in Pechatu.",
-      "recommendation": "For a group, choose a villa with two or three bedrooms; Bungalow Suite is a separate category for two.",
-      "note": "",
-      "address": "Jl. Batu Lesung, Pecatu, Kec. Kuta Sel., Kabupaten Badung, Bali 80361",
-      "area": "Uluwatu and the Bukit",
-      "category": "🏨 Hotels and villas",
-      "section": "Hotels and villas",
-      "_sourceHash": "d6a9458ec45555a89969374407ab399179d6ca39daa557c9e7b5c78cf63c382e"
     },
     "fc6356960a6d": {
       "name": "Terra Cottages Bali",
@@ -2883,17 +2707,6 @@
       "category": "🏖️ Beach clubs and pools",
       "section": "",
       "_sourceHash": "db6139fa85471c3af0a27e42c230e1fce3a1c1ff14534a552166615b1748c9b8"
-    },
-    "8f8a32f0e305": {
-      "name": "LOTTE Mart Wholesale",
-      "description": "Large hypermarket on the highway near the airport: groceries, care, souvenirs, baked goods, Korean food.",
-      "recommendation": "",
-      "note": "",
-      "address": "",
-      "area": "Jimbaran, Kuta, Sanur",
-      "category": "🛍️ Shops",
-      "section": "",
-      "_sourceHash": "fa8106fdfc001dfe735bdb8184a4f88c11b0f9f36a6ec4b9fe4a5fc27545cf73"
     },
     "a4de2822b173": {
       "name": "Tous les Jours",
@@ -2961,17 +2774,6 @@
       "section": "Stores",
       "_sourceHash": "8daf14634bafd520f377cc13dcc5ae1c9680dcf7ca7cac4bd941a35a5733fa29"
     },
-    "1f9c5360cd2f": {
-      "name": "Beachwalk Shopping Center",
-      "description": "Shopping center near Kuta Beach.",
-      "recommendation": "",
-      "note": "",
-      "address": "Jl. Pantai Kuta, Kuta, Kec. Kuta Sel., Kabupaten Badung, Bali 80361",
-      "area": "Jimbaran, Kuta, Sanur",
-      "category": "🛍️ Shops",
-      "section": "Stores",
-      "_sourceHash": "cbb028841a1756e7f77230a146f07a3c9b492da94c759bdd4693c7f6c8f7d94f"
-    },
     "b374e5afd7dc": {
       "name": "Senses Spa",
       "description": "Spa on the rocks of Balangan at Biu Biu Resort: massages and baths with ocean views.",
@@ -2982,17 +2784,6 @@
       "category": "💆 Spas, massage and saunas",
       "section": "Spa, massage, baths",
       "_sourceHash": "634a75d1650fb38ea083c65b962780514fa8362cd1dcc9e2e165072090aeb48b"
-    },
-    "0cb9d2c6eb31": {
-      "name": "Sanur",
-      "description": "Coastal area in the east of Denpasar with beaches, hotels and a long promenade.",
-      "recommendation": "For a trip to Nusa Lembongan, consider Sanur as the starting point of the sea route.",
-      "note": "Area mark.",
-      "address": "Sanur, Bali",
-      "area": "Jimbaran, Kuta, Sanur",
-      "category": "📍 Areas",
-      "section": "Districts",
-      "_sourceHash": "6d3a630b964f9a80809657315ce944037be8e90b948e019b9fc8862b742a3a0e"
     },
     "b6f95d1e7b39": {
       "name": "RIMBA by AYANA Bali",
@@ -3081,28 +2872,6 @@
       "category": "🛍️ Shops",
       "section": "Stores",
       "_sourceHash": "574dca72894db868ee002bb55d6c02b8a7c388e3ae7c3b583532ca99fc3cc6fb"
-    },
-    "0597b8727206": {
-      "name": "Jatiluwih Swing",
-      "description": "Swings near the rice fields of Jatiluwih.",
-      "recommendation": "Arrive at opening time at 09:00 or late afternoon for soft light for photos on the swing.",
-      "note": "",
-      "address": "Br. Dinas Gunungsari Kelod, Jatiluwih, Kec. Penebel, Kabupaten Tabanan, Bali 80671",
-      "area": "Tabanan",
-      "category": "🌄 Nature and viewpoints",
-      "section": "Nature and lookouts",
-      "_sourceHash": "a27b49467a67657b79f85e0d1fc29db17648b9b2495832f4a1956261bf80cd32"
-    },
-    "d6a0803f83ad": {
-      "name": "Centre Point Jatiluwih",
-      "description": "Viewpoint at the Jatiluwih terraces.",
-      "recommendation": "Use as a stop for a panoramic view of the rice terraces; this is a vantage point, not a stand-alone restaurant.",
-      "note": "",
-      "address": "J4HP+JHP, Unnamed Road, Jatiluwih, Kec. Penebel, Kabupaten Tabanan, Bali 82152",
-      "area": "Tabanan",
-      "category": "🌄 Nature and viewpoints",
-      "section": "Nature and lookouts",
-      "_sourceHash": "85307e21c51d95f0b11930735f0d06211a0446e79c0a56d5fd1dea3bef1d44a4"
     },
     "9060705c3843": {
       "name": "Jatiluwih Rice Terraces",
@@ -3357,17 +3126,6 @@
       "section": "Temples, museums, art",
       "_sourceHash": "21f9b748e9f3ce64cdd97ed2dbbd99a134fb5fcb0c97565563320d757e0b1c6f"
     },
-    "6b62d3e5452d": {
-      "name": "Puncak Wanagiri",
-      "description": "Viewpoint on the Vanagiri mountain road.",
-      "recommendation": "Drive in clear weather.",
-      "note": "",
-      "address": "Jl. Raya Wanagiri, Pancasari, Kec. Sukasada, Kabupaten Buleleng, Bali 81161",
-      "area": "North and east Bali",
-      "category": "🌄 Nature and viewpoints",
-      "section": "Nature and lookouts",
-      "_sourceHash": "eb259fbe4d3c0799cf39036c4fc5a6f015a56e01aff06614fc1b7cddb2caddf7"
-    },
     "c6ea6091cbef": {
       "name": "Bali Handara Gate",
       "description": "The gate of the Handara resort in the mountains near Bedugul.",
@@ -3422,17 +3180,6 @@
       "category": "☕ Coffee and breakfast",
       "section": "Coffee and breakfast",
       "_sourceHash": "ffd70ea376392fb3705b5703738507eeccc1e79e848b691c4eac09b6288df495"
-    },
-    "9d031930ee58": {
-      "name": "Nusa Lembongan",
-      "description": "Island with beaches and turquoise water.",
-      "recommendation": "",
-      "note": "",
-      "address": "",
-      "area": "Nusa Islands",
-      "category": "🌄 Nature and viewpoints",
-      "section": "",
-      "_sourceHash": "e2b4dc8b44619080534ddeb256615830dd29875795d005750564dea48701d9b8"
     },
     "7e5dbff763f0": {
       "name": "Arna",
@@ -3489,17 +3236,6 @@
       "section": "Nature and lookouts",
       "_sourceHash": "7487c0f1729a231ad5907a5f57620b86609345955ccdd8de7c7a06d7b7ff7c70"
     },
-    "d0798813c4da": {
-      "name": "Porch",
-      "description": "Cafe offering 13 varieties of syrniki, chosen using illustrated cards.",
-      "recommendation": "",
-      "note": "Profile @porch.bali. A match with The Porch Cafe in Sanur has not been confirmed.",
-      "address": "",
-      "area": "Location unconfirmed",
-      "category": "☕ Coffee and breakfast",
-      "section": "",
-      "_sourceHash": "ce85553f8f463da55aab5163cba3cf467210b630d080109db56e3f0a00ed5453"
-    },
     "bf3b94e1d462": {
       "name": "Mamu Garden",
       "description": "A restaurant in a glass greenhouse serving desserts and seafood.",
@@ -3524,47 +3260,25 @@
     },
     "89f4aaacde2e": {
       "name": "Swan Paradise",
-      "description": "Tennis court on the grass among palm trees, there is also padel.",
-      "recommendation": "",
-      "note": "A connection with the Pramana hotel in Gianyar has not been confirmed.",
+      "description": "Grass-court tennis and padel at Swan Paradise A Pramana Experience in Gianyar.",
+      "recommendation": "The Stay & Play Padel and Play & Swing Tennis packages combine a stay with court time.",
+      "note": "",
       "address": "",
-      "area": "Location unconfirmed",
+      "area": "Ubud and surroundings",
       "category": "🎾 Sports",
       "section": "",
-      "_sourceHash": "482b715038308f06b0ae5639fa69a46a6fb3ac28a71fd2a5820ee538f16123f1"
+      "_sourceHash": "98571ff24af0b2d10b2291824edcc9df27aa1365e90582cb6c4871a9237a9ca7"
     },
     "1528b5ee2391": {
       "name": "House of Kairos",
-      "description": "Club hotel with a gym, a striped pool, a sauna and a cafe.",
-      "recommendation": "",
-      "note": "Profile @house_of_kairos. The exact address has not been established.",
-      "address": "",
-      "area": "Location unconfirmed",
-      "category": "🏨 Hotels and villas",
-      "section": "",
-      "_sourceHash": "9153c39855761745cfff7d337cf4d409aaf0831427ecb2542ddf28213878e800"
-    },
-    "e426a43f1401": {
-      "name": "Sauna with ocean view",
-      "description": "Glass-fronted sauna above a beach, shown at sunset in the video.",
-      "recommendation": "",
-      "note": "The name Holywings Wellness Club was suggested in the comments; a match to the sauna in the video has not been confirmed.",
-      "address": "",
-      "area": "Location unconfirmed",
-      "category": "💆 Spas, massage and saunas",
-      "section": "",
-      "_sourceHash": "1afac8c3f86eb1294f98cb82979ea2aea8ecd242300bd698d6109ea34460f78f"
-    },
-    "abf808579d10": {
-      "name": "Indonesian Food Festival",
-      "description": "Past Indonesian food festival at Discovery Mall in Kuta.",
-      "recommendation": "",
+      "description": "Wellness club in Seseh with a gym, pool, recovery facilities, restaurant and coworking.",
+      "recommendation": "Day passes and memberships are available; open daily from 07:00 to 22:00.",
       "note": "",
-      "address": "",
-      "area": "Location unconfirmed",
-      "category": "🍽️ Restaurants",
-      "section": "",
-      "_sourceHash": "3a52e30b66739957b16845dfdd6258c7968b622d1b58984731d3b902f27a7354"
+      "address": "Jl. Pantai Munggu, Munggu, Mengwi, Badung, Bali 80351",
+      "area": "Canggu, Berawa, Pererenan, Seseh",
+      "category": "💆 Spa, massage, saunas",
+      "section": "Yoga, wellness, sport, accommodation",
+      "_sourceHash": "7d6e18213c3976f15f24f9c2b3f05c9161df504e95a980814f77c1c72d11dece"
     },
     "696212bc3632": {
       "name": "Aetheria Natural Healing Spa",
