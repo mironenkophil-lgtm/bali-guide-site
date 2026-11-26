@@ -266,9 +266,21 @@ async function start() {
     L.control.zoom({position: 'topright', zoomInTitle: t('Приблизить'), zoomOutTitle: t('Отдалить')}).addTo(state.map);
     // crossOrigin lets the offline copy (sw.js) save tiles as normal images.
     const tiles = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {maxZoom: 19, crossOrigin: true, attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'}).addTo(state.map);
-    // Cluster only in the island overview; show individual places from zoom 9.
-    state.pins = L.markerClusterGroup({maxClusterRadius: 45, disableClusteringAtZoom: 9, showCoverageOnHover: false, chunkedLoading: true,
+    // Calibrate against the whole Ubud area, rather than a fixed zoom number:
+    // the same geographic view has different zooms on phones and wide screens.
+    const districtZoom = () => state.map.getBoundsZoom([[-8.58, 115.21], [-8.43, 115.31]]);
+    state.pins = L.markerClusterGroup({maxClusterRadius: 45, disableClusteringAtZoom: districtZoom() || 12, showCoverageOnHover: false, chunkedLoading: true,
       iconCreateFunction: c => L.divIcon({className: 'pin-cluster', html: c.getChildCount(), iconSize: [36, 36]})}).addTo(state.map);
+    state.map.on('resize', () => {
+      const size = state.map.getSize(), zoom = districtZoom();
+      if (!size.x || !size.y || zoom === state.pins.options.disableClusteringAtZoom) return;
+      const opened = [...state.markers.values()].find(marker => marker.isPopupOpen());
+      state.pins.options.disableClusteringAtZoom = zoom;
+      // clearLayers rebuilds markercluster's zoom grids with the new threshold.
+      state.pins.clearLayers();
+      state.pins.addLayers([...state.markers.values()]);
+      if (opened && state.map.getZoom() >= zoom) opened.openPopup();
+    });
     let tileErrors = 0;
     tiles.on('tileerror', () => {if (++tileErrors >= 3) {$('map-status').hidden = false; $('map-status').textContent = t('Подложка карты не загрузилась. Места есть в списке.');}});
     tiles.on('load', () => {if (!tileErrors) $('map-status').hidden = true;});
