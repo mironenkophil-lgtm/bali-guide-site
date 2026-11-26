@@ -1,7 +1,7 @@
 'use strict';
 // Offline copy of the map. The first visit saves the page, the data and every photo;
 // map tiles are saved as they are viewed (no bulk download, per the tile servers' rules).
-const PAGE = 'page-v15', PHOTOS = 'photos-v2', TILES = 'tiles-v2', MAX_TILES = 2000;
+const PAGE = 'page-v16', PHOTOS = 'photos-v2', TILES = 'tiles-v2', MAX_TILES = 2000;
 const FILES = ['./', 'style.css', 'app.js', 'i18n.js', 'places.json', 'places.en.json', 'vendor/leaflet.css', 'vendor/leaflet.js', 'vendor/MarkerCluster.css', 'vendor/leaflet.markercluster.js'];
 
 addEventListener('install', event => event.waitUntil((async () => {

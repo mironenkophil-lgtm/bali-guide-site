@@ -129,13 +129,13 @@ function fit() {
   const coords = state.visible.filter(p => p.lat !== null).map(p => [p.lat, p.lng]);
   if (state.map && coords.length) state.map.fitBounds(coords, {padding: [55, 55], maxZoom: 14});
 }
-function view(mapMode) {
+function view(mapMode, fitPlaces = true) {
   document.body.classList.toggle('map-mode', mapMode);
   $('map-view').classList.toggle('active', mapMode);
   $('list-view').classList.toggle('active', !mapMode);
   $('map-view').setAttribute('aria-pressed', String(mapMode));
   $('list-view').setAttribute('aria-pressed', String(!mapMode));
-  if (mapMode && state.map) requestAnimationFrame(() => {state.map.invalidateSize(); if (!state.follow) fit();});
+  if (mapMode && state.map) requestAnimationFrame(() => {state.map.invalidateSize(); if (fitPlaces && !state.follow) fit();});
 }
 function locationStatus(message) {
   $('location-status').hidden = !message;
@@ -191,7 +191,8 @@ function select(id, fromMap = false) {
   const url = new URL(location.href); url.searchParams.set('place', id); history.replaceState(null, '', url);
   if (fromMap) {if (matchMedia('(min-width:761px)').matches) element?.scrollIntoView({block: 'nearest'}); return;}
   if (p.lat === null) return;
-  if (matchMedia('(max-width:760px)').matches) view(true);
+  // Revealing the map must not start a competing fitBounds animation over this selection.
+  if (matchMedia('(max-width:760px)').matches) view(true, false);
   const marker = state.markers.get(id);
   if (state.map && marker) requestAnimationFrame(() => {state.map.setView([p.lat, p.lng], 15, {animate: false}); state.pins.zoomToShowLayer(marker, () => marker.openPopup());});
 }
@@ -260,8 +261,8 @@ async function start() {
     L.control.zoom({position: 'topright', zoomInTitle: t('Приблизить'), zoomOutTitle: t('Отдалить')}).addTo(state.map);
     // crossOrigin lets the offline copy (sw.js) save tiles as normal images.
     const tiles = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {maxZoom: 19, crossOrigin: true, attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'}).addTo(state.map);
-    // Hundreds of separate pins make the map stutter on a phone, so nearby pins merge into a count until zoom 15.
-    state.pins = L.markerClusterGroup({maxClusterRadius: 45, disableClusteringAtZoom: 15, showCoverageOnHover: false, chunkedLoading: true,
+    // Cluster only in the island overview; show individual places from zoom 11.
+    state.pins = L.markerClusterGroup({maxClusterRadius: 45, disableClusteringAtZoom: 11, showCoverageOnHover: false, chunkedLoading: true,
       iconCreateFunction: c => L.divIcon({className: 'pin-cluster', html: c.getChildCount(), iconSize: [36, 36]})}).addTo(state.map);
     let tileErrors = 0;
     tiles.on('tileerror', () => {if (++tileErrors >= 3) {$('map-status').hidden = false; $('map-status').textContent = t('Подложка карты не загрузилась. Места есть в списке.');}});
