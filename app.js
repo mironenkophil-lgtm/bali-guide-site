@@ -1,9 +1,10 @@
 'use strict';
+const showcase = document.body.dataset?.access === 'showcase';
 const $ = id => document.getElementById(id);
-const state = {places: [], visible: [], selected: null, similar: null, focus: 'all', matches: new Map(), map: null, pins: null, markers: new Map(), here: null, sortedAt: null, watch: null, follow: false, location: null};
+const state = {places: [], lockedPlaces: [], visible: [], selected: null, similar: null, focus: 'all', matches: new Map(), map: null, pins: null, markers: new Map(), here: null, sortedAt: null, watch: null, follow: false, location: null};
 // «Хочу» и «Был» live only in this browser: {placeId: 'want' | 'been'}.
 const MARKS_KEY = 'bali-marks';
-const marks = (() => {try {return JSON.parse(localStorage.getItem(MARKS_KEY)) || {};} catch {return {};}})();
+const marks = (() => {try {if (showcase) return {}; return JSON.parse(localStorage.getItem(MARKS_KEY)) || {};} catch {return {};}})();
 const escaped = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const label = (p, field) => english ? translations.places[p.id][field] : p[field];
 const fold = value => String(value).toLocaleLowerCase('ru').replace(/ё/g, 'е');
@@ -66,11 +67,11 @@ function similarPlaces(source, candidates, focus = 'all') {
     return {place: p, reasons, score};
   }).filter(match => match.score > 0).sort((a, b) => b.score - a.score || Number(b.place.area === source.area) - Number(a.place.area === source.area) || a.place.id.localeCompare(b.place.id));
 }
-const similarButton = p => dining(p) ? `<button class="similar-button" type="button" data-similar="${escaped(p.id)}">${t('Найти похожее')}</button>` : '';
+const similarButton = p => !showcase && dining(p) ? `<button class="similar-button" type="button" data-similar="${escaped(p.id)}">${t('Найти похожее')}</button>` : '';
 const similarityReason = p => state.similar && state.matches.has(p.id) ? `<p class="similar-reasons">${t('Общее: ')}${state.matches.get(p.id).reasons.map(reason => escaped(t(reason))).join(' · ')}</p>` : '';
 function chooseSimilar(id) {
   const source = state.places.find(p => p.id === id);
-  if (!source || !dining(source)) return;
+  if (showcase || !source || !dining(source)) return;
   state.similar = id;
   state.focus = 'all';
   for (const id of ['search', 'area', 'category', 'mark', 'sort']) $(id).value = '';
@@ -92,7 +93,7 @@ function links(p, popup = false) {
   let html = '';
   if (safeLink(p.mapUrl)) html += `<a href="${escaped(p.mapUrl)}" target="_blank" rel="noopener noreferrer">Google Maps</a>`;
   if (p.lat !== null && p.lng !== null) html += `<a href="https://www.google.com/maps/dir/?api=1&destination=${p.lat},${p.lng}" target="_blank" rel="noopener noreferrer">${t('Маршрут')}</a>`;
-  const sources = popup ? p.sourceUrls.slice(0, 1) : p.sourceUrls;
+  const sources = showcase ? [] : (popup ? (p.sourceUrls || []).slice(0, 1) : (p.sourceUrls || []));
   sources.forEach((url, i) => {if (safeLink(url)) html += `<a href="${escaped(url)}" target="_blank" rel="noopener noreferrer">Instagram${sources.length > 1 ? ' ' + (i + 1) : ''}</a>`;});
   return html;
 }
@@ -100,6 +101,7 @@ function links(p, popup = false) {
 const menuBasket = {cafe: 'кофе + завтрак', restaurant: 'салат + основное + алкогольный напиток', bar: '3 коктейля + закуска'};
 const menuCharges = {excluded: 'без налогов и сбора', included: 'налоги и сбор включены', unspecified: 'налоги и сбор не указаны'};
 function priceInfo(p) {
+  if (showcase) return '';
   if (p.googlePriceRange && safeLink(p.googlePriceSourceUrl)) return `<p class="text price">${escaped(p.googlePriceRange)} ${t('на человека')} · <a href="${escaped(p.googlePriceSourceUrl)}" target="_blank" rel="noopener noreferrer">Google Maps</a></p>`;
   const m = p.menuPriceEstimate;
   if (!m || !safeLink(m.sourceUrl)) return '';
@@ -116,8 +118,8 @@ function km([lat1, lng1], [lat2, lng2]) {
 const distance = d => d < 1 ? Math.round(d * 100) * 10 + (english ? ' m' : ' м') : d.toLocaleString(english ? 'en-GB' : 'ru-RU', {maximumFractionDigits: d < 10 ? 1 : 0}) + (english ? ' km' : ' км');
 // Category without its leading emoji, area and, once the location is known, distance: «Рестораны · Убуд и окрестности · 3,2 км».
 const meta = p => `<p class="meta">${escaped(label(p, 'category').replace(/^\S+\s+/, ''))} · ${escaped(label(p, 'area'))}${state.here && p.lat !== null ? ' · ' + distance(km(state.here, [p.lat, p.lng])) : ''}</p>`;
-const markButtons = p => `<div class="marks">${[['want', 'Хочу'], ['been', 'Был']].map(([mark, label]) => `<button type="button" data-mark="${mark}" data-id="${p.id}" aria-pressed="${marks[p.id] === mark}">${t(label)}</button>`).join('')}</div>`;
-const pinIcon = p => L.divIcon({className: 'emoji-pin' + (marks[p.id] ? ' ' + marks[p.id] : ''), html: escaped(p.emoji), iconSize: [32, 32], iconAnchor: [16, 16], popupAnchor: [0, -16]});
+const markButtons = p => showcase ? '' : `<div class="marks">${[['want', 'Хочу'], ['been', 'Был']].map(([mark, label]) => `<button type="button" data-mark="${mark}" data-id="${p.id}" aria-pressed="${marks[p.id] === mark}">${t(label)}</button>`).join('')}</div>`;
+const pinIcon = p => L.divIcon({className: 'emoji-pin' + (!showcase && marks[p.id] ? ' ' + marks[p.id] : ''), html: escaped(p.emoji), iconSize: [32, 32], iconAnchor: [16, 16], popupAnchor: [0, -16]});
 function popup(p) {
   return `${p.image ? `<img class="popup-img" src="${escaped(p.image)}" alt="${escaped(label(p, 'name'))}">` : ''}<h2>${escaped(label(p, 'name'))}</h2>${meta(p)}${details(p)}${similarityReason(p)}<div class="links">${links(p, true)}</div>${markButtons(p)}${similarButton(p)}`;
 }
@@ -197,6 +199,7 @@ function select(id, fromMap = false) {
   if (state.map && marker) requestAnimationFrame(() => {state.map.setView([p.lat, p.lng], 15, {animate: false}); state.pins.zoomToShowLayer(marker, () => marker.openPopup());});
 }
 function setMark(id, mark) {
+  if (showcase) return;
   if (marks[id] === mark) delete marks[id]; else marks[id] = mark;
   try {localStorage.setItem(MARKS_KEY, JSON.stringify(marks));} catch {}
   document.querySelectorAll(`[data-mark][data-id="${id}"]`).forEach(b => b.setAttribute('aria-pressed', String(marks[id] === b.dataset.mark)));
@@ -253,6 +256,11 @@ async function start() {
   const response = await fetch('places.json', {cache: 'no-cache'});
   if (!response.ok) throw new Error(t('Не удалось загрузить подборку'));
   const data = await response.json(); state.places = data.places;
+  state.lockedPlaces = showcase ? data.lockedPlaces || [] : [];
+  if (showcase) {
+    $('mark').closest('label').hidden = true;
+    $('showcase-status').textContent = t('Открыто ') + places(state.places.length) + t(' · Серые точки — места в платной карте. Поиск и фильтры работают по открытым карточкам.');
+  }
   if (english) {const response = await fetch('places.en.json', {cache: 'no-cache'}); if (!response.ok) throw new Error('Could not load English translations'); translations = await response.json();}
   $('updated').textContent = t('Обновлено ') + new Date(data.updated + 'T12:00:00').toLocaleDateString(english ? 'en-GB' : 'ru-RU');
   for (const [id, field] of [['area', 'area'], ['category', 'category']]) {
@@ -260,7 +268,7 @@ async function start() {
   }
   const params = new URLSearchParams(location.search); const savedPlace = params.get('place');
   $('search').value = params.get('q') || '';
-  for (const [id, key] of [['area', 'area'], ['category', 'type'], ['mark', 'mark']]) {if ([...$(id).options].some(o => o.value === params.get(key))) $(id).value = params.get(key);}
+  for (const [id, key] of [['area', 'area'], ['category', 'type'], ['mark', 'mark']]) {if (showcase && id === 'mark') continue; if ([...$(id).options].some(o => o.value === params.get(key))) $(id).value = params.get(key);}
   if (typeof L !== 'undefined') {
     state.map = L.map('map', {zoomControl: false, scrollWheelZoom: true}).setView([-8.52, 115.18], 10);
     L.control.zoom({position: 'topright', zoomInTitle: t('Приблизить'), zoomOutTitle: t('Отдалить')}).addTo(state.map);
@@ -281,12 +289,14 @@ async function start() {
       state.pins.addLayers([...state.markers.values()]);
       if (opened && state.map.getZoom() >= zoom) opened.openPopup();
     });
+    // Closed points have no names, IDs, popups or filterable attributes.
+    L.layerGroup(state.lockedPlaces.map(p => L.circleMarker([p.lat, p.lng], {radius: 4, color: '#777', weight: 1, fillColor: '#999', fillOpacity: 0.65, interactive: false}))).addTo(state.map);
     let tileErrors = 0;
     tiles.on('tileerror', () => {if (++tileErrors >= 3) {$('map-status').hidden = false; $('map-status').textContent = t('Подложка карты не загрузилась. Места есть в списке.');}});
     tiles.on('load', () => {if (!tileErrors) $('map-status').hidden = true;});
     new ResizeObserver(() => state.map.invalidateSize()).observe($('map-panel'));
   } else {$('map-status').hidden = false; $('map-status').textContent = t('Карта недоступна. Места есть в списке.');}
-  const similar = state.places.find(p => p.id === params.get('similar') && dining(p));
+  const similar = !showcase && state.places.find(p => p.id === params.get('similar') && dining(p));
   state.similar = similar?.id || null;
   state.focus = ['all', ...Object.keys(similarityTraits)].includes(params.get('focus')) ? params.get('focus') : 'all';
   render(); if (savedPlace) select(savedPlace);
@@ -308,5 +318,5 @@ document.addEventListener('click', event => {const button = event.target.closest
 $('map-view').addEventListener('click', () => view(true)); $('list-view').addEventListener('click', () => view(false));
 $('locate').addEventListener('click', locate);
 addEventListener('pagehide', stopLocation);
-if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(() => {});
-start().catch(error => {$('count').textContent = t('Ошибка загрузки'); $('cards').innerHTML = `<div class="empty"><strong>${escaped(error.message)}</strong>${t('Обновите страницу или откройте')} <a href="downloads/Bali-places${english ? '-en' : ''}.html">${t('подборку')}</a>.</div>`;});
+if ('serviceWorker' in navigator && !showcase) navigator.serviceWorker.register('sw.js').catch(() => {});
+start().catch(error => {$('count').textContent = t('Ошибка загрузки'); $('cards').innerHTML = `<div class="empty"><strong>${escaped(error.message)}</strong>${showcase ? t('Обновите страницу.') : `${t('Обновите страницу или откройте')} <a href="downloads/Bali-places${english ? '-en' : ''}.html">${t('подборку')}</a>.`}</div>`;});

@@ -3,6 +3,10 @@
 const english = new URLSearchParams(location.search).get('lang') === 'en';
 let translations = {places: {}};
 const messages = {
+  "Бесплатная витрина": "Free preview",
+  "Открыто ": "Open: ",
+  " · Серые точки — места в платной карте. Поиск и фильтры работают по открытым карточкам.": " · Grey dots are places on the paid map. Search and filters apply to open cards.",
+  "Обновите страницу.": "Reload the page.",
   "Бали": "Bali",
   "Бали — места из рилсов": "Bali — places from reels",
   "Места на Бали из сохранённых рилсов: карта, фото и маршруты.": "Places in Bali from saved reels: map, photos and directions.",
