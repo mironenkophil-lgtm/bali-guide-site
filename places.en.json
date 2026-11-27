@@ -3836,6 +3836,28 @@
       "category": "☕ Coffee & breakfast",
       "section": "Cafés",
       "_sourceHash": "e16f1838a18ab83cb6cda6c03bff060fe4c8bfc0b258c7d7cf96f21a52bf40ac"
+    },
+    "4d69d2887d9e": {
+      "name": "Hippie Fish Pererenan Beach",
+      "description": "Mediterranean restaurant by Pererenan Beach with seafood and a rooftop bar. The post highlights the ocean view; republished Google reviews praise the service and beachfront dinner.",
+      "recommendation": "Google reviewers mention spaghetti vongole and grilled prawns. The official site recommends booking for sunset.",
+      "note": "",
+      "address": "Jalan Pantai Pererenan No. 171, Pererenan, Mengwi, Badung, Bali 80361",
+      "area": "Canggu and surroundings",
+      "category": "🍽️ Restaurants",
+      "section": "Restaurants and sunset",
+      "_sourceHash": "6467851a6bd9ed92521c2fcabb63e59a027eee4e2567e4a4370994845caed8a2"
+    },
+    "ef5d03919987": {
+      "name": "Burnt at Ulu Cliffhouse",
+      "description": "Restaurant with an open fire kitchen, terrace and cliffside lounge at Ulu Cliffhouse. The post highlights sunset views; republished Google reviews praise the staff, food and cocktails.",
+      "recommendation": "Google reviewers recommend scallops, ribeye and potato Parmentier. The official site suggests the Sunset Terrace for sunset.",
+      "note": "",
+      "address": "Jl. Labuansait No. 315, Pecatu, Uluwatu, Badung, Bali 80361",
+      "area": "Uluwatu and Bukit",
+      "category": "🍽️ Restaurants",
+      "section": "Restaurants and sunset",
+      "_sourceHash": "b3476624d8dafc6cc1472868c7f093a10fb8a234c9b96bbbf378103220a06204"
     }
   }
 }
