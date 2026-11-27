@@ -3825,6 +3825,17 @@
       "category": "🛍️ Shops",
       "section": "Shops",
       "_sourceHash": "cdf334d6754005d957bd0cd1bf6fd577adb41dd755493dda2481e4d85a94c387"
+    },
+    "52d6a7e90d2f": {
+      "name": "Komorebi Ubud — Onigiri Cafe",
+      "description": "Japanese café on Sugriwa Street serving onigiri, miso soup, karaage and coffee.",
+      "recommendation": "",
+      "note": "",
+      "address": "Jl. Sugriwa No.12, Ubud, Kecamatan Ubud, Kabupaten Gianyar, Bali 80571, Indonesia",
+      "area": "Ubud and surroundings",
+      "category": "☕ Coffee & breakfast",
+      "section": "Cafés",
+      "_sourceHash": "e16f1838a18ab83cb6cda6c03bff060fe4c8bfc0b258c7d7cf96f21a52bf40ac"
     }
   }
 }
