@@ -3546,10 +3546,10 @@
       "recommendation": "Try Nasi Campur Campuhan or Cold Brew Cashew Coffee. Reaching the cafe involves walking along the steps in Penestanan.",
       "note": "",
       "address": "Jl. Raya Campuhan, Sayan, Ubud, Bali 80571",
-      "area": "Ubud",
+      "area": "Ubud & surroundings",
       "category": "☕ Coffee and breakfast",
       "section": "Breakfast and coffee",
-      "_sourceHash": "9927dc7a4df3f13ee59bde795ad46bfbe71dd935e59f49d59e33f8219f84a5dc"
+      "_sourceHash": "58642e1c2d4f10e335726746f4b3a3887bd8015bb7b8c38d63c9cf79e5b6eff4"
     },
     "771164040f17": {
       "name": "Clear Café Ubud",
@@ -3557,10 +3557,10 @@
       "recommendation": "Choose the Dragon Bowl with tofu or tempeh, or the Golden Temple Curry. Seafood options are listed separately.",
       "note": "",
       "address": "Jl. Hanoman No.8, Ubud, Gianyar, Bali 80571",
-      "area": "Ubud",
+      "area": "Ubud & surroundings",
       "category": "☕ Coffee and breakfast",
       "section": "Breakfast and coffee",
-      "_sourceHash": "587f650d3798e8cbf236196e3151d1bbb37d32a48be9ba3459ff78de3a7bb38e"
+      "_sourceHash": "92993a5b8a937ea1731fbd9f3473c239030544bbcb8f3d8e6d8f1fc63a398e66"
     },
     "67226ac09a17": {
       "name": "Moksa Ubud",
@@ -3568,10 +3568,10 @@
       "recommendation": "Try Tempeh Ribs or Asam Laksa Noodle from the chef's recommendations; last order at 20:30.",
       "note": "",
       "address": "Ubud II Kutuh, Jl. Puskesmas, Sayan, Ubud, Gianyar, Bali 80571",
-      "area": "Ubud",
+      "area": "Ubud & surroundings",
       "category": "☕ Coffee and breakfast",
       "section": "Breakfast and coffee",
-      "_sourceHash": "8e3e05f8514abd31189664de8d8644af549005a210dbda48bf0358d8931f7df2"
+      "_sourceHash": "7d3511d35fa6f6b7275dd52bc58d96b1cef1b353c9cfbed36b61b6623969413e"
     },
     "83cff7a95bd2": {
       "name": "Land’s End Café",
@@ -3810,10 +3810,21 @@
       "recommendation": "Google reviewers recommend Beyond The Whisk, a tasting of matcha grades paired with sweets, and hojicha as a separate drink.",
       "note": "",
       "address": "Behind PISON UBUD, Jl. Hanoman, Ubud, Kecamatan Ubud, Kabupaten Gianyar, Bali 80571, Indonesia",
-      "area": "Ubud & surroundings",
+      "area": "Ubud and surroundings",
       "category": "☕ Coffee & breakfast",
       "section": "Cafés",
       "_sourceHash": "1b771f8b6389cb1e28a724003b0ab5463a63c24e5f171420956880c8ee0460c6"
+    },
+    "53f7afd43b1a": {
+      "name": "Oaken Lab — Ubud",
+      "description": "Indonesian perfumery boutique with Stillroom, a space for botanical drinks. Google reviewers praise the attentive guidance and time to try fragrances on their skin.",
+      "recommendation": "Google reviewers suggest trying Far Afield and Temple Moss on your skin. The current official Stillroom page focuses on alcohol-free drinks, kombucha, coffee and sparkling tea.",
+      "note": "",
+      "address": "Jl. Raya Sanggingan, Kedewatan, Ubud, Gianyar, Bali 80571, Indonesia",
+      "area": "Ubud & surroundings",
+      "category": "🛍️ Shops",
+      "section": "Shops",
+      "_sourceHash": "cdf334d6754005d957bd0cd1bf6fd577adb41dd755493dda2481e4d85a94c387"
     }
   }
 }
