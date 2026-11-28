@@ -79,6 +79,7 @@ function chooseSimilar(id) {
   state.similar = id;
   state.focus = 'all';
   for (const id of ['search', 'area', 'category', 'mark', 'sort']) $(id).value = '';
+  if ($('open-now')) $('open-now').checked = false;
   $('filter-drawer').open = false;
   render(); view(false);
   document.querySelector('.sidebar').scrollTop = 0;
@@ -97,9 +98,71 @@ function links(p, popup = false) {
   let html = '';
   if (safeLink(p.mapUrl)) html += `<a href="${escaped(p.mapUrl)}" target="_blank" rel="noopener noreferrer">Google Maps</a>`;
   if (p.lat !== null && p.lng !== null) html += `<a href="https://www.google.com/maps/dir/?api=1&destination=${p.lat},${p.lng}" target="_blank" rel="noopener noreferrer">${t('Маршрут')}</a>`;
+  if (safeLink(p.reserveUrl)) html += `<a href="${escaped(p.reserveUrl)}" target="_blank" rel="noopener noreferrer">${t('Забронировать')}</a>`;
   const sources = !premium ? [] : (popup ? (p.sourceUrls || []).slice(0, 1) : (p.sourceUrls || []));
   sources.forEach((url, i) => {if (safeLink(url)) html += `<a href="${escaped(url)}" target="_blank" rel="noopener noreferrer">Instagram${sources.length > 1 ? ' ' + (i + 1) : ''}</a>`;});
   return html;
+}
+
+const weekdays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+const weekdayLabels = ['Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница', 'Суббота', 'Воскресенье'];
+const baliClock = new Intl.DateTimeFormat('en-GB', {timeZone: 'Asia/Makassar', weekday: 'long', hour: '2-digit', minute: '2-digit', hourCycle: 'h23'});
+function baliTime(date = new Date()) {
+  const parts = Object.fromEntries(baliClock.formatToParts(date).map(({type, value}) => [type, value]));
+  return {day: weekdays.indexOf(parts.weekday), minute: Number(parts.hour) * 60 + Number(parts.minute)};
+}
+
+// A closing time after midnight is measured from the day the range starts.
+// Missing or unrecognized hours are null. Only an explicit "Closed" is empty.
+function parseHours(raw) {
+  const text = typeof raw === 'string' ? raw.trim().toLowerCase() : '';
+  if (text === 'closed') return [];
+  if (text === 'open 24 hours') return [[0, 1440]];
+  if (!text) return null;
+  const ranges = [];
+  for (const range of text.split(',')) {
+    const match = range.trim().match(/^(1[0-2]|[1-9])(?::([0-5]\d))?\s*(am|pm)?\s*(?:to|[-‒–—−])\s*(1[0-2]|[1-9])(?::([0-5]\d))?\s*(am|pm)$/);
+    if (!match) return null;
+    const [, startHour, startMinute, startPeriod, endHour, endMinute, endPeriod] = match;
+    const minutes = (hour, minute, period) => (Number(hour) % 12 + (period === 'pm' ? 12 : 0)) * 60 + Number(minute || 0);
+    const start = minutes(startHour, startMinute, startPeriod || endPeriod);
+    const end = minutes(endHour, endMinute, endPeriod);
+    if (start === end) return null;
+    ranges.push([start, end < start ? end + 1440 : end]);
+  }
+  return ranges.sort(([a], [b]) => a - b);
+}
+
+function openingStatus(hours, {day, minute}) {
+  const today = parseHours(hours[weekdays[day]]);
+  if (!today && hours[weekdays[day]]) return {};
+  const yesterday = parseHours(hours[weekdays[(day + 6) % 7]]) || [];
+  const ranges = [...yesterday.filter(([, end]) => end > 1440).map(([start, end]) => [start - 1440, end - 1440]), ...(today || [])];
+  const until = ranges.reduce((end, [start, stop]) => start <= end ? Math.max(end, stop) : end, minute);
+  if (until > minute) return {open: true, until, allDay: today?.[0]?.[1] === 1440 && today[0][0] === 0};
+  if (!today) return {};
+  const next = today.find(([start]) => start > minute);
+  const tomorrow = parseHours(hours[weekdays[(day + 1) % 7]]);
+  return {open: false, next: next?.[0] ?? tomorrow?.[0]?.[0], tomorrow: !next};
+}
+
+const clockTime = minute => `${Math.floor(minute / 60) % 24}:${String(minute % 60).padStart(2, '0')}`;
+function hoursLabel(raw) {
+  const ranges = parseHours(raw);
+  if (!ranges) return raw || t('Нет данных');
+  if (!ranges.length) return t('Закрыто');
+  if (ranges[0][0] === 0 && ranges[0][1] === 1440) return t('Круглосуточно');
+  return ranges.map(([start, end]) => `${clockTime(start)}–${clockTime(end)}`).join(', ');
+}
+function hoursInfo(p, now = baliTime()) {
+  if (!p.hours || !Object.keys(p.hours).length) return '';
+  const {open, until, allDay, next, tomorrow} = openingStatus(p.hours, now);
+  let status = '';
+  if (open) status = allDay ? t('Открыто') : t('Открыто до ') + clockTime(until);
+  if (open === false) status = next === undefined ? t('Закрыто') : t(tomorrow ? 'Закрыто, откроется завтра в ' : 'Закрыто, откроется в ') + clockTime(next);
+  const today = hoursLabel(p.hours[weekdays[now.day]]);
+  const week = weekdays.map((day, index) => `<dt>${t(weekdayLabels[index])}</dt><dd>${escaped(hoursLabel(p.hours[day]))}</dd>`).join('');
+  return `<p class="meta">${t('Сегодня')} ${escaped(today)}${status && status !== today ? ' · ' + status : ''}</p><details class="hours-week meta"><summary>${t('Часы на неделю')}</summary><dl>${week}</dl></details>`;
 }
 // Google's range is a reported spend per person, separate from menu prices and tips.
 const menuBasket = {cafe: 'кофе + завтрак', restaurant: 'салат + основное + алкогольный напиток', bar: '3 коктейля + закуска'};
@@ -159,11 +222,11 @@ function emojiRenderer() {
   }))({padding: 0.2});
 }
 function popup(p) {
-  return `${p.image ? `<img class="popup-img" src="${escaped(p.image)}" alt="${escaped(label(p, 'name'))}">` : ''}<h2>${escaped(label(p, 'name'))}</h2>${meta(p)}${details(p)}${similarityReason(p)}<div class="links">${links(p, true)}</div>${markButtons(p)}${similarButton(p)}`;
+  return `${p.image ? `<img class="popup-img" src="${escaped(p.image)}" alt="${escaped(label(p, 'name'))}">` : ''}<h2>${escaped(label(p, 'name'))}</h2>${meta(p)}${hoursInfo(p)}${details(p)}${similarityReason(p)}<div class="links">${links(p, true)}</div>${markButtons(p)}${similarButton(p)}`;
 }
-function card(p) {
+function card(p, now) {
   const photo = p.image ? `<img class="card-photo" src="${escaped(p.image)}" alt="${escaped(label(p, 'name'))}" loading="lazy" decoding="async">` : `<div class="card-photo card-placeholder" aria-hidden="true">${escaped(p.emoji)}</div>`;
-  return `<article class="card${p.id === state.selected ? ' selected' : ''}" id="place-${p.id}" data-id="${p.id}"><div class="card-top">${photo}<div class="card-heading"><h2 class="place-name"><button class="place-button" data-place="${p.id}" type="button">${escaped(label(p, 'name'))}</button></h2>${meta(p)}${details(p)}${similarityReason(p)}<div class="links">${links(p)}</div>${markButtons(p)}${similarButton(p)}</div></div></article>`;
+  return `<article class="card${p.id === state.selected ? ' selected' : ''}" id="place-${p.id}" data-id="${p.id}"><div class="card-top">${photo}<div class="card-heading"><h2 class="place-name"><button class="place-button" data-place="${p.id}" type="button">${escaped(label(p, 'name'))}</button></h2>${meta(p)}${hoursInfo(p, now)}${details(p)}${similarityReason(p)}<div class="links">${links(p)}</div>${markButtons(p)}${similarButton(p)}</div></div></article>`;
 }
 function fit() {
   const coords = state.visible.filter(p => p.lat !== null).map(p => [p.lat, p.lng]);
@@ -245,32 +308,36 @@ function setMark(id, mark) {
   if (p) state.markers.get(id)?.redraw();
   if ($('mark').value) render();
 }
-function renderList() {
+function renderList(now = baliTime()) {
   const shown = !state.similar && $('sort').value && state.here
     ? [...state.visible].sort((a, b) => (a.lat === null) - (b.lat === null) || (a.lat !== null && km(state.here, [a.lat, a.lng]) - km(state.here, [b.lat, b.lng])))
     : state.visible;
   const pins = state.visible.filter(p => p.lat !== null).length;
   $('count').textContent = !state.similar && $('sort').value && !state.here ? t('Определяю местоположение…') : places(state.visible.length) + (pins < state.visible.length ? `, ${pins} ${t('на карте')}` : '');
-  $('cards').innerHTML = shown.length ? shown.map(card).join('') : `<div class="empty"><strong>${t('Ничего не нашлось')}</strong>${state.similar ? t('Совпадений по описаниям нет. Выберите другой признак или сбросьте фильтры.') : $('mark').value ? t('Отметок пока нет: нажмите «Хочу» или «Был» в карточке.') : t('Измените запрос или сбросьте фильтры.')}</div>`;
+  $('cards').innerHTML = shown.length ? shown.map(p => card(p, now)).join('') : `<div class="empty"><strong>${t('Ничего не нашлось')}</strong>${state.similar ? t('Совпадений по описаниям нет. Выберите другой признак или сбросьте фильтры.') : $('mark').value ? t('Отметок пока нет: нажмите «Хочу» или «Был» в карточке.') : t('Измените запрос или сбросьте фильтры.')}</div>`;
 }
 function render() {
   clearTimeout(searchTimer);
   const words = fold($('search').value).trim().split(/\s+/).filter(Boolean);
   const area = $('area').value, category = $('category').value, mark = $('mark').value;
+  const openNow = !showcase && $('open-now')?.checked;
+  const now = baliTime();
   const source = state.places.find(p => p.id === state.similar);
   $('similar-panel').hidden = !source;
   $('similar-close').hidden = !source;
   $('similar-name').textContent = source ? label(source, 'name') : '';
   document.querySelectorAll('[data-focus]').forEach(button => button.setAttribute('aria-pressed', String(button.dataset.focus === state.focus)));
   $('sort-option').hidden = Boolean(source);
-  const activeFilters = ['area', 'category', 'mark'].map(id => $(id)).filter(input => input.value);
-  $('filter-label').textContent = activeFilters.length ? t('Фильтры') + ' (' + activeFilters.length + ')' : t('Фильтры');
+  const activeFilters = [area, category, mark, openNow].filter(Boolean).length;
+  $('filter-label').textContent = activeFilters ? t('Фильтры') + ' (' + activeFilters + ')' : t('Фильтры');
   $('sort').disabled = Boolean(source);
   const matches = source ? similarPlaces(source, state.places, state.focus) : [];
   state.matches = new Map(matches.map(match => [match.place.id, match]));
   const candidates = source ? matches.map(match => match.place) : state.places;
-  state.visible = candidates.filter(p => (!area || p.area === area) && (!category || p.category === category) && (!mark || marks[p.id] === mark) && words.every(word => fold([p.name, p.description, p.recommendation, p.area, p.category, ...['name', 'description', 'recommendation', 'area', 'category'].map(field => label(p, field))].join(' ')).includes(word)));
-  renderList();
+  state.visible = candidates.filter(p => (!area || p.area === area) && (!category || p.category === category) && (!mark || marks[p.id] === mark)
+    && (!openNow || (p.hours && openingStatus(p.hours, now).open))
+    && words.every(word => fold([p.name, p.description, p.recommendation, p.area, p.category, ...['name', 'description', 'recommendation', 'area', 'category'].map(field => label(p, field))].join(' ')).includes(word)));
+  renderList(now);
   if (state.map) {
     const wanted = new Set(state.visible.filter(p => p.lat !== null).map(p => p.id));
     const removed = [...state.markers].filter(([id]) => !wanted.has(id));
@@ -294,7 +361,7 @@ function render() {
     fit();
   }
   const url = new URL(location.href);
-  for (const [key, value] of [['area', area], ['type', category], ['mark', mark], ['q', $('search').value], ['similar', state.similar || ''], ['focus', state.similar && state.focus !== 'all' ? state.focus : '']]) {if (value) url.searchParams.set(key, value); else url.searchParams.delete(key);}
+  for (const [key, value] of [['area', area], ['type', category], ['mark', mark], ['q', $('search').value], ['open', openNow ? '1' : ''], ['similar', state.similar || ''], ['focus', state.similar && state.focus !== 'all' ? state.focus : '']]) {if (value) url.searchParams.set(key, value); else url.searchParams.delete(key);}
   if (!state.visible.some(p => p.id === state.selected)) {state.selected = null; url.searchParams.delete('place');}
   history.replaceState(null, '', url);
 }
@@ -314,6 +381,11 @@ async function start() {
   }
   const params = new URLSearchParams(location.search); const savedPlace = params.get('place');
   $('search').value = params.get('q') || '';
+  const openOption = $('open-now-option'), openFilter = $('open-now');
+  if (openOption && openFilter && !showcase) {
+    openOption.hidden = !state.places.some(p => p.hours && Object.keys(p.hours).length);
+    openFilter.checked = !openOption.hidden && params.get('open') === '1';
+  }
   for (const [id, key] of [['area', 'area'], ['category', 'type'], ['mark', 'mark']]) {if (showcase && id === 'mark') continue; if ([...$(id).options].some(o => o.value === params.get(key))) $(id).value = params.get(key);}
   if (typeof L !== 'undefined') {
     state.map = L.map('map', {zoomControl: false, scrollWheelZoom: true}).setView([-8.52, 115.18], 10);
@@ -350,8 +422,9 @@ async function start() {
 }
 $('search').addEventListener('input', () => {clearTimeout(searchTimer); searchTimer = setTimeout(clearSimilar, 160);});
 $('area').addEventListener('change', render); $('category').addEventListener('change', render); $('mark').addEventListener('change', render);
+$('open-now')?.addEventListener('change', render);
 $('sort').addEventListener('change', () => {if ($('sort').value && !watchLocation()) $('sort').value = ''; renderList(); document.querySelector('.sidebar').scrollTop = 0;});
-$('reset').addEventListener('click', () => {$('filter-drawer').open = false;state.similar = null; state.focus = 'all'; $('search').value = ''; $('area').value = ''; $('category').value = ''; $('mark').value = ''; render();});
+$('reset').addEventListener('click', () => {$('filter-drawer').open = false;state.similar = null; state.focus = 'all'; $('search').value = ''; $('area').value = ''; $('category').value = ''; $('mark').value = ''; if ($('open-now')) $('open-now').checked = false; render();});
 $('cards').addEventListener('click', event => {const button = event.target.closest('[data-place]'); if (button) select(button.dataset.place);});
 $('similar-focus').addEventListener('click', event => {
   const button = event.target.closest('[data-focus]');
