@@ -52,6 +52,8 @@ const messages = {
   "Найти похожее": "Find similar",
   "Общее: ": "In common: ",
   "Маршрут": "Directions",
+  "Фото": "Photo",
+  "уменьшено и кадрировано при показе": "resized and cropped for display",
   "Забронировать": "Reserve",
   "Открыто сейчас": "Open now",
   "Сегодня": "Today",

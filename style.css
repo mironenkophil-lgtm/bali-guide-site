@@ -49,6 +49,8 @@ footer{font-size:13px;color:var(--muted);padding:16px 20px 32px}
 .leaflet-popup-content{font-size:14px;line-height:1.45;max-width:270px;margin:14px;max-height:calc(100dvh - 240px);overflow-y:auto}
 .leaflet-popup-content p{margin:6px 0 0}
 .popup-img{display:block;width:100%;height:150px;object-fit:cover;border-radius:6px;margin-bottom:10px}
+.photo-credit,.leaflet-popup-content .photo-credit{margin:4px 0 8px;color:var(--muted);font-size:12px}
+.photo-credit a,.leaflet-popup-content .photo-credit a{color:inherit;text-decoration:underline}
 .leaflet-popup-content h2{font-size:16px;line-height:1.3;margin:0 0 2px}
 .leaflet-control-zoom{margin-top:16px!important;margin-right:16px!important}
 .leaflet-control-attribution{font-size:11px!important}

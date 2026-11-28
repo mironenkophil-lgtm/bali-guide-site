@@ -221,12 +221,18 @@ function emojiRenderer() {
     }
   }))({padding: 0.2});
 }
+function photoCredit(p) {
+  const source = safeLink(p.imageReferenceUrl), license = safeLink(p.imageLicenseUrl);
+  if (!p.image || !p.imageSourceAuthor || !p.imageLicense || !source || !license) return '';
+  const title = p.imageSourceTitle ? ` («${escaped(p.imageSourceTitle)}»)` : '';
+  return `<p class="photo-credit">${t('Фото')}: <a href="${escaped(source)}" target="_blank" rel="noopener noreferrer">${escaped(p.imageSourceAuthor)}${title}</a>, <a href="${escaped(license)}" target="_blank" rel="noopener noreferrer">${escaped(p.imageLicense)}</a> · ${t('уменьшено и кадрировано при показе')}</p>`;
+}
 function popup(p) {
-  return `${p.image ? `<img class="popup-img" src="${escaped(p.image)}" alt="${escaped(label(p, 'name'))}">` : ''}<h2>${escaped(label(p, 'name'))}</h2>${meta(p)}${hoursInfo(p)}${details(p)}${similarityReason(p)}<div class="links">${links(p, true)}</div>${markButtons(p)}${similarButton(p)}`;
+  return `${p.image ? `<img class="popup-img" src="${escaped(p.image)}" alt="${escaped(label(p, 'name'))}">` : ''}${photoCredit(p)}<h2>${escaped(label(p, 'name'))}</h2>${meta(p)}${hoursInfo(p)}${details(p)}${similarityReason(p)}<div class="links">${links(p, true)}</div>${markButtons(p)}${similarButton(p)}`;
 }
 function card(p, now) {
   const photo = p.image ? `<img class="card-photo" src="${escaped(p.image)}" alt="${escaped(label(p, 'name'))}" loading="lazy" decoding="async">` : `<div class="card-photo card-placeholder" aria-hidden="true">${escaped(p.emoji)}</div>`;
-  return `<article class="card${p.id === state.selected ? ' selected' : ''}" id="place-${p.id}" data-id="${p.id}"><div class="card-top">${photo}<div class="card-heading"><h2 class="place-name"><button class="place-button" data-place="${p.id}" type="button">${escaped(label(p, 'name'))}</button></h2>${meta(p)}${hoursInfo(p, now)}${details(p)}${similarityReason(p)}<div class="links">${links(p)}</div>${markButtons(p)}${similarButton(p)}</div></div></article>`;
+  return `<article class="card${p.id === state.selected ? ' selected' : ''}" id="place-${p.id}" data-id="${p.id}"><div class="card-top">${photo}<div class="card-heading"><h2 class="place-name"><button class="place-button" data-place="${p.id}" type="button">${escaped(label(p, 'name'))}</button></h2>${meta(p)}${hoursInfo(p, now)}${details(p)}${photoCredit(p)}${similarityReason(p)}<div class="links">${links(p)}</div>${markButtons(p)}${similarButton(p)}</div></div></article>`;
 }
 function fit() {
   const coords = state.visible.filter(p => p.lat !== null).map(p => [p.lat, p.lng]);
